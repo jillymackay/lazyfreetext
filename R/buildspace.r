@@ -33,5 +33,25 @@ t4 <- quicktfplot(t1, lemma, ID)
 
 
 
+t1 %>%
+  group_by(ID) %>%
+  count (ID, lemma, sort = TRUE) %>%
+  ungroup() %>%
+  mutate (total = sum(n)) %>%
+  bind_tf_idf (., lemma, ID, n) %>%
+  arrange(desc (tf_idf)) %>%
+  mutate (word = factor(lemma, levels = rev(unique(lemma)))) %>%
+  group_by (ID) %>%
+  top_n(5, tf_idf) %>%
+  ungroup() %>%
+  ggplot(aes(word, tf_idf, fill = ID)) +
+  geom_col(show.legend = FALSE) +
+  labs (x = NULL, y = "Term Frequency - Inverse Document Frequency") +
+  facet_wrap(~ID, scales = "free") +
+  theme_classic() +
+  coord_flip()
+
+
+
 
 
