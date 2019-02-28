@@ -8,14 +8,15 @@ library (textstem)
 #' This function tokenises and lemmatises the data in your tidy dataset
 #' @param data name of your dataset (must be tidy)
 #' @param freetext variable containing your freetext data
+#' @param stops defaults to 'stop_words', rbind your own to stop_words for added stops
 #' @examples no examples just yet - need to find some free text data in datasets!
 
-lazyfreetext <- function (data, freetext){
+lazyfreetext <- function (data, freetext, stops = stop_words){
   ft <- enquo(freetext)
   data %>%
     unnest_tokens(word, !!ft)  %>%
     mutate (lemma = (lemmatize_strings(word))) %>%
-    anti_join(stop_words)
+    anti_join(stops)
 }
 
 

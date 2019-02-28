@@ -1,7 +1,7 @@
 Package: lazyfreetext
 Title: This Package Deals With Survey Free Text (Lazily)
 Version: 0.0.0.9000
-Authors@R: ("Jill", "MacKay", email = "jill.mackay@ed.ac.uk", role = c("aut", "cre"))
+Authors@R: person("Jill", "MacKay", email = "jill.mackay@ed.ac.uk", role = c("aut", "cre"))
 Description: This package wraps up some common charts and functions from tidyverse and tidytext to deal with free text data in surveys.
 Depends: R (>= 3.5.1)
 License: MIT + file LICENSE
