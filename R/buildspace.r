@@ -53,5 +53,28 @@ t1 %>%
 
 
 
+quicktfplot <- function (data, token, grouping_factor) {
+  qgv <- enquo(grouping_factor)
+  t <- enquo(token)
+  l <- data %>%
+    group_by(!!qgv) %>%
+    count (!!qgv, !!t, sort = TRUE) %>%
+    ungroup() %>%
+    mutate (total = sum(n)) %>%
+    bind_tf_idf (., !!t, !!qgv, n) %>%
+    arrange(desc (tf_idf)) %>%
+    mutate (word = factor(!!t, levels = rev(unique(!!t)))) %>%
+    group_by (!!qgv) %>%
+    top_n(5, tf_idf) %>%
+    ungroup()
+
+  l %>%
+    ggplot(aes(x = word, y = tf_idf)) +
+    geom_col(show.legend = FALSE) +
+    labs (x = NULL, y = "Term Frequency - Inverse Document Frequency") +
+    facet_wrap(~!!qgv, scales = "free") +
+    theme_classic() +
+    coord_flip()
+}
 
 
