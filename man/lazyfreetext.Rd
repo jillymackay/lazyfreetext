@@ -4,12 +4,14 @@
 \alias{lazyfreetext}
 \title{The lazyfreetext function}
 \usage{
-lazyfreetext(data, freetext)
+lazyfreetext(data, freetext, stops = stop_words)
 }
 \arguments{
 \item{data}{name of your dataset (must be tidy)}
 
 \item{freetext}{variable containing your freetext data}
+
+\item{stops}{defaults to 'stop_words', rbind your own to stop_words for added stops}
 }
 \description{
 This function tokenises and lemmatises the data in your tidy dataset
