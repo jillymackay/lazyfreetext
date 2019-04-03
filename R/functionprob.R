@@ -4,6 +4,12 @@
 library (tidyverse)
 
 
+ft1 <- readxl::read_excel("data/testdata.xlsx",
+                          sheet = "ft1")
+
+t1 <- lazyfreetext(ft1, Text)
+
+
 mpg %>%
   arrange (desc(cty)) %>%
   mutate(newx = factor(class, levels = rev(unique(class)))) %>%
