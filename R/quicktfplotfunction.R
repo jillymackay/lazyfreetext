@@ -2,18 +2,20 @@ library (tidyverse)
 library (tidytext)
 library (textstem)
 
-# This isnae working yet!!!
-# prob need to pass a bunch of other things through this
-# like the top_n val
-# and probably some other shit
 
+#' The quicktfplot function
+#' This function quickly calculates a term-frequency inverse-document-frequency plot for any grouped data
+#' @param data name of your dataset (data must be tokenised, see lazyfreetext)
+#' @param token name of your 'token' you are counting, defaults to 'lemma' from lazyfreetext
+#' @param grouping_factor what group do you want your tf_idf to be created from
+#' @param topn number passed to top_n
+#' @examples none yet!
 
-# mutate (lemma = factor (lemma, levels = rev(unique(lemma))))
-
-quicktfplot <- function (data, token, grouping_factor) {
+quicktfplot <- function (data, token = "lemma", grouping_factor, topn) {
   qgv <- enquo(grouping_factor)
   t <- enquo(token)
-  p <- data %>%
+
+  data %>%
     group_by(!!qgv) %>%
     count (!!qgv, !!t, sort = TRUE) %>%
     ungroup() %>%
@@ -22,14 +24,12 @@ quicktfplot <- function (data, token, grouping_factor) {
     arrange(desc (tf_idf)) %>%
     mutate (word = factor(!!t, levels = rev(unique(!!t)))) %>%
     group_by (!!qgv) %>%
-    top_n(5, tf_idf) %>%
+    top_n(topn, tf_idf) %>%
     ungroup() %>%
-    ggplot(aes_(~word, ~tf_idf, fill = !!qgv)) +
+    ggplot(aes(x = word, y = tf_idf, fill = !!qgv)) +
     geom_col(show.legend = FALSE) +
     labs (x = NULL, y = "Term Frequency - Inverse Document Frequency") +
-    facet_wrap(~!!qgv, scales = "free") +
+    facet_wrap(facets = vars(!!qgv), scales = "free") +
     theme_classic() +
     coord_flip()
-  return(p)
-
-  }
+}

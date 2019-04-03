@@ -14,56 +14,22 @@ ft3 <- readxl::read_excel("data/testdata.xlsx",
                  sheet = "ft3")
 
 
-
-t1 <- lazyfreetext(ft1, Text)
-
-
 extrastops <- tibble(lexicon = c("mine", "mine"), word = c("chapter", "chief"))
 extrastops <- rbind(stop_words, extrastops)
 
-t2 <- lazyfreetext(ft1, Text, stops = extrastops)
 
+t1 <- lazyfreetext(ft1, Text)
 
-t3 <- lazytf(t1, lemma, ID)
-
-
-# Here is where we are currently at
-t4 <- quicktfplot(t1, lemma, ID)
-
-
-write.csv(t1, "data/t1.csv")
-
-t1 %>%
-  group_by(ID) %>%
-  count (ID, lemma, sort = TRUE) %>%
-  ungroup() %>%
-  mutate (total = sum(n)) %>%
-  bind_tf_idf (., lemma, ID, n) %>%
-  arrange(desc (tf_idf)) %>%
-  mutate (word = factor(lemma, levels = rev(unique(lemma)))) %>%
-  group_by (ID) %>%
-  top_n(5, tf_idf) %>%
-  ungroup() %>%
-  ggplot(aes(word, tf_idf, fill = ID)) +
-  geom_col(show.legend = FALSE) +
-  labs (x = NULL, y = "Term Frequency - Inverse Document Frequency") +
-  facet_wrap(~ID, scales = "free") +
-  theme_classic() +
-  coord_flip()
+quicktfplot(t1, lemma, ID, 3)
 
 
 
-quicktfplot <- function (data, token, grouping_factor) {
-  qgv <- enquo(grouping_factor)
-  t <- enquo(token)
+t2 <- lazyfreetext(ft2, Text, stops = extrastops)
 
-  data%>%
-    ggplot(aes(x = word, y = tf_idf)) +
-    geom_col(show.legend = FALSE) +
-    labs (x = NULL, y = "Term Frequency - Inverse Document Frequency") +
-    facet_wrap(~!!qgv, scales = "free") +
-    theme_classic() +
-    coord_flip()
-}
+quicktfplot(t2, lemma, Grp1, 5)
 
-quicktfplot(t2, lemma, ID)
+
+
+t3 <- lazyfreetext(ft3, Text, stops = extrastops)
+
+quicktfplot(t3, lemma, Grp2, 5)
